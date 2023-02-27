@@ -1,0 +1,11 @@
+.table_cell {
+    border: 0;
+    background-color: transparent;
+}
+.table_cell::placeholder {
+    color: #212529;
+}
+.context-menu {
+    position: absolute;
+    display: none;
+}

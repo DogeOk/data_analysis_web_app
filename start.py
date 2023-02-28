@@ -12,15 +12,20 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
+def index():
+    return render_template('index.html')
+
+
+@app.route('/table')
+def table():
     return render_template(
-        'index.html',
+        'table.html',
         data=user.data.head(10),
         len=len(user.data.columns)
     )
 
 
-@app.route('/change_table', methods=['POST'])
+@app.route('/table/change_table', methods=['POST'])
 def change_table():
     index = request.form['index']
     column = request.form['column']

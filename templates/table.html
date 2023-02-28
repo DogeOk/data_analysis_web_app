@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} Таблица {% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            {%for i in range(0, len)%}
+                <th scope="col">{{data.columns[i]}}</th>
+            {%endfor%}
+        </tr>
+    </thead>
+    <tbody>
+        {%for index, row in data.iterrows()%}
+            <tr>
+            {%for column, value in row.items()%}
+                <td><input index="{{index}}" column="{{column}}" onchange="send_value(this.index, this.column, this.value)" oncontextmenu="cell_context_menu()" class="table_cell w-100" type="text" value="{{value}}"></td>
+            {%endfor%}
+            </tr>
+        {%endfor%}
+    </tbody>
+</table>
+<script src="{{ url_for('static', filename='table.js') }}"></script>
+{% endblock %}

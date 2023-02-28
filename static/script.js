@@ -1,5 +1,3 @@
-
-
 function cell_context_menu() {
     context_menu = document.getElementById('context-menu');
     context_menu.style.display = 'block';
@@ -17,3 +15,10 @@ document.addEventListener('click', function() {
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 }, false);
+
+function send_value(index, column, value) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', './change_table');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send('index=' + index + '&column=' + column + '&value=' + value);
+}

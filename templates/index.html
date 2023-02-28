@@ -38,8 +38,8 @@
         <tbody>
             {%for index, row in data.iterrows()%}
                 <tr>
-                {%for value in row.values%}
-                    <td><input oncontextmenu="cell_context_menu()" class="table_cell w-100" type="text" value="{{value}}"></td>
+                {%for column, value in row.items()%}
+                    <td><input index="{{index}}" column="{{column}}" onchange="send_value(this.index, this.column, this.value)" oncontextmenu="cell_context_menu()" class="table_cell w-100" type="text" value="{{value}}"></td>
                 {%endfor%}
                 </tr>
             {%endfor%}

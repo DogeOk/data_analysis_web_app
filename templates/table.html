@@ -15,7 +15,7 @@
         {%for index, row in data.iterrows()%}
             <tr>
             {%for column, value in row.items()%}
-                <td><input index="{{index}}" column="{{column}}" onchange="send_value(this.index, this.column, this.value)" oncontextmenu="cell_context_menu()" class="table_cell w-100" type="text" value="{{value}}"></td>
+                <td><input onchange="send_value('{{index}}', '{{column}}', this.value)" oncontextmenu="cell_context_menu()" class="table_cell w-100" type="text" value="{{value}}"></td>
             {%endfor%}
             </tr>
         {%endfor%}

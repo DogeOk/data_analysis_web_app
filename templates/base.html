@@ -67,11 +67,11 @@
             </div>
             <div class="modal-content" id="registerForm"">
                 <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Регистрация</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    <h5 class="modal-title" id="loginModalLabel">Регистрация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                 </div>
-                <div class="modal-body">
-                    <form>
+                <form action="" method="post">
+                    <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="inputRegisterLogin">Логин</label>
                             <input type="text" class="form-control" id="inputRegisterLogin" aria-describedby="loginHelp" placeholder="Введите логин">
@@ -88,12 +88,12 @@
                             <input type="password" class="form-control" id="inputRepeatPassword" placeholder="Повторно введите пароль">
                         </div>
                         <span>Есть аккаунт? <a href="#" onclick="hideShow('registerForm', 'loginForm')">Войти</a></span>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-success">Регистрация</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-success">Регистрация</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

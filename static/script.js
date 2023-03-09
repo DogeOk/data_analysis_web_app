@@ -1,12 +1,15 @@
+//Hide context menu on left click
 document.addEventListener('click', function() {
     context_menu = document.getElementById('context-menu');
     context_menu.style.display = 'none';
 }, false);
 
+//Hide default context menu on right click
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 }, false);
 
+//Create context menu with elements and actions
 function create_context_menu(elements, functions) {
     context_menu = document.getElementById('context-menu');
     context_menu.innerHTML = '';
@@ -22,6 +25,7 @@ function create_context_menu(elements, functions) {
     }
 }
 
+//Hide one element and show another element
 function hideShow(hideBlock, showBlock) {
     document.getElementById(hideBlock).style.display = 'none';
     document.getElementById(showBlock).style.display = 'block';

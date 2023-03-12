@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -33,8 +33,8 @@
                     </li>
                 </ul>
                 <div class="d-flex">
-                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hide_show('registerForm', 'loginForm')">Авторизация</button>
-                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hide_show('loginForm', 'registerForm')">Регистрация</button>
+                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
+                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                             <label for="inputPassword">Пароль</label>
                             <input type="password" class="form-control" id="inputPassword" placeholder="Введите пароль">
                         </div>
-                        <span>Нет аккаунта? <a href="#" onclick="hide_show('loginForm', 'registerForm')">Регистрация</a></span>
+                        <span>Нет аккаунта? <a href="#" onclick="hideShow('loginForm', 'registerForm')">Регистрация</a></span>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -74,23 +74,23 @@
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="inputRegisterLogin">Логин</label>
-                            <input type="text" class="form-control" id="inputRegisterLogin" aria-describedby="loginHelp" placeholder="Введите логин" onchange="check_login(this.value);">
+                            <input type="text" class="form-control" id="inputRegisterLogin" aria-describedby="loginHelp" placeholder="Введите логин" onchange="checkLogin(this.value);">
                             <div id="invalidLogin" class="invalid-feedback">
                                 Такой логин уже существует.
                             </div>
                         </div>
                         <div class="form-group mb-3">
                             <label for="inputRegisterPassword">Пароль</label>
-                            <input type="password" class="form-control" id="inputRegisterPassword" placeholder="Введите пароль" onchange="check_password();">
+                            <input type="password" class="form-control" id="inputRegisterPassword" placeholder="Введите пароль" onchange="checkPassword();">
                         </div>
                         <div class="form-group mb-3">
                             <label for="inputRepeatPassword">Повторите пароль</label>
-                            <input type="password" class="form-control" id="inputRepeatPassword" placeholder="Повторно введите пароль" onchange="check_password();">
+                            <input type="password" class="form-control" id="inputRepeatPassword" placeholder="Повторно введите пароль" onchange="checkPassword();">
                             <div id="invalidPassword" class="invalid-feedback">
                                 Пароли не совпадают.
                             </div>
                         </div>
-                        <span>Есть аккаунт? <a href="#" onclick="hide_show('registerForm', 'loginForm')">Войти</a></span>
+                        <span>Есть аккаунт? <a href="#" onclick="hideShow('registerForm', 'loginForm')">Войти</a></span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
@@ -101,7 +101,7 @@
         </div>
     </div>
     <div id="context-menu" class="dropdown-menu context-menu"></div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

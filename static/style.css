@@ -1,11 +1,11 @@
 a {
     text-decoration: none;
 }
-.table_cell {
+.table-cell {
     border: 0;
     background-color: transparent;
 }
-.table_cell::placeholder {
+.table-cell::placeholder {
     color: #212529;
 }
 .context-menu {

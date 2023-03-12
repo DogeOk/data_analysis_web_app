@@ -10,7 +10,7 @@ document.addEventListener('contextmenu', function(e) {
 }, false);
 
 //Create context menu with elements and actions
-function create_context_menu(elements, functions) {
+function createContextMenu(elements, functions) {
     context_menu = document.getElementById('context-menu');
     context_menu.innerHTML = '';
     context_menu.style.display = 'block';
@@ -26,12 +26,12 @@ function create_context_menu(elements, functions) {
 }
 
 //Hide one element and show another element
-function hide_show(hideBlock, showBlock) {
+function hideShow(hideBlock, showBlock) {
     document.getElementById(hideBlock).style.display = 'none';
     document.getElementById(showBlock).style.display = 'block';
 }
 
-function check_login(login) {
+function checkLogin(login) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', './check_login');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -48,7 +48,7 @@ function check_login(login) {
     xhr.send('login=' + login);
 }
 
-function check_password() {
+function checkPassword() {
     password = document.getElementById('inputRegisterPassword').value;
     repeat_password = document.getElementById('inputRepeatPassword').value;
     if (password != '' && repeat_password != '') {

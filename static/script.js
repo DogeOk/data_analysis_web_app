@@ -26,7 +26,36 @@ function create_context_menu(elements, functions) {
 }
 
 //Hide one element and show another element
-function hideShow(hideBlock, showBlock) {
+function hide_show(hideBlock, showBlock) {
     document.getElementById(hideBlock).style.display = 'none';
     document.getElementById(showBlock).style.display = 'block';
+}
+
+function check_login(login) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', './check_login');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200){
+            if (xhr.responseText != 'None') {
+                document.getElementById('invalidLogin').style.display = 'block';
+            } else {
+                document.getElementById('invalidLogin').style.display = 'none';
+            }
+            console.log(xhr.responseText);
+        }
+    }
+    xhr.send('login=' + login);
+}
+
+function check_password() {
+    password = document.getElementById('inputRegisterPassword').value;
+    repeat_password = document.getElementById('inputRepeatPassword').value;
+    if (password != '' && repeat_password != '') {
+        if (password == repeat_password) {
+            document.getElementById('invalidPassword').style.display = 'none';
+        } else {
+            document.getElementById('invalidPassword').style.display = 'block';
+        }
+    }
 }

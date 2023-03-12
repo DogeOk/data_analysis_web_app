@@ -45,8 +45,28 @@ def change_table():
     return '0'
 
 
-@app.route('/test')
-def test():
-    db.session.add(User(username='test12', password='test'))
+@app.route('/check_login', methods=['POST'])
+def check_login():
+    login = request.form['login']
+    if User.query.filter_by(username=login).first() is None:
+        return 'None'
+    else:
+        return 'Find'
+
+
+@app.route('/add_account', methods=['POST'])
+def add_account():
+    login = request.form['login']
+    password = request.form['password']
+    db.session.add(User(username=login, password=password))
     db.session.commit()
-    print(User.query.all())
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    login = request.form['login']
+    password = request.form['password']
+    if User.query.filter_by(username=login, password=password).first() is None:
+        return 'None'
+    else:
+        return 'Find'

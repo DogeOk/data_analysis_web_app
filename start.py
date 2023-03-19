@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
+import os
 
 #Class with user data
 class UserInfo():
@@ -20,14 +21,11 @@ class User(db.Model):
     username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String)
 
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 #Table page
-@app.route('/table')
+@app.route('/')
 def table():
+    if (not os.path.isfile('./instance/project.db')):
+        db.create_all()
     return render_template(
         'table.html',
         data=user.data.head(10),
@@ -63,6 +61,7 @@ def add_account():
     db.session.commit()
     response = make_response('Success')
     response.set_cookie('login', login)
+    os.makedirs(f'./users_files/{login}')
     return response
 
 #Authorization
@@ -78,12 +77,16 @@ def login():
         return response
 
 
-@app.route('/add_database_table')
-def add_table():
-    db.create_all()
+@app.route('/user_files')
+def user_files():
+    login = request.cookies.get('login')
+    if login is None:
+        return 'Error'
+    files = [file for file in os.listdir(f"./users_files/{login}")]
+    return files
 
 
 @app.route('/get_cookie')
 def get_cookie():
     login = request.cookies.get('login')
-    return "cookie: " + login
+    return "cookie: " + str(login)

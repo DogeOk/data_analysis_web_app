@@ -104,7 +104,7 @@ function addAccount() {
     xhr.send('login=' + login + '&password=' + password);
 }
 
-//Authorixation
+//Authorization
 function login() {
     login = document.getElementById('inputLogin').value;
     password = document.getElementById('inputPassword').value;
@@ -117,6 +117,22 @@ function login() {
                 location.reload();
             } else {
                 alert('Неверный логин или пароль.');
+            }
+        }
+    }
+    xhr.send('login=' + login + '&password=' + password);
+}
+
+//Upload user files in web
+function get_user_files() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', './user_files');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200){
+            files = xhr.responseText;
+            for (let file = 0; file < files.length; file++) {
+
             }
         }
     }

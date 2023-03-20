@@ -3,6 +3,16 @@
 {% block title %} Таблица {% endblock %}
 
 {% block content %}
+{% if login == None %}
+<div class="centered-div">
+    <div>
+        <h5 class="h5">Пожалуйста войдите в свой аккаунт или зарегистрируйтесь, чтобы продолжить работу</h5>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
+    </div>
+</div>
+{% endif %}
+{% if login != None %}
 <table class="table table-hover">
     <thead>
         <tr>
@@ -21,5 +31,6 @@
         {%endfor%}
     </tbody>
 </table>
+{% endif %}
 <script src="{{ url_for('static', filename='table.js') }}"></script>
 {% endblock %}

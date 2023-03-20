@@ -3,25 +3,28 @@ from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 import os
 
-#Class with user data
+
+# Class with user data
 class UserInfo():
     data = pd.read_csv('./games.csv')
 
 
 user = UserInfo()
 
-#Init flask app and database
+# Init flask app and database
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 db = SQLAlchemy(app)
 
-#Users table in database
+
+# Users table in database
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String)
 
-#Table page
+
+# Table page
 @app.route('/')
 def table():
     if (not os.path.isfile('./instance/project.db')):
@@ -29,10 +32,12 @@ def table():
     return render_template(
         'table.html',
         data=user.data.head(10),
-        len=len(user.data.columns)
+        len=len(user.data.columns),
+        login=request.cookies.get('login')
     )
 
-#Change table values
+
+# Change table values
 @app.route('/table/change_table', methods=['POST'])
 def change_table():
     index = request.form['index']
@@ -43,7 +48,8 @@ def change_table():
     user.data.loc[index, column] = value
     return '0'
 
-#Check login
+
+# Check login
 @app.route('/check_login', methods=['POST'])
 def check_login():
     login = request.form['login']
@@ -52,7 +58,8 @@ def check_login():
     else:
         return 'Find'
 
-#Add account
+
+# Add account
 @app.route('/add_account', methods=['POST'])
 def add_account():
     login = request.form['login']
@@ -64,7 +71,8 @@ def add_account():
     os.makedirs(f'./users_files/{login}')
     return response
 
-#Authorization
+
+# Authorization
 @app.route('/login', methods=['POST'])
 def login():
     login = request.form['login']
@@ -75,6 +83,13 @@ def login():
         response = make_response('Success')
         response.set_cookie('login', login)
         return response
+
+
+@app.route('/logout')
+def logout():
+    response = make_response('<script>window.location.replace("/");</script>')
+    response.delete_cookie('login')
+    return response
 
 
 @app.route('/user_files')

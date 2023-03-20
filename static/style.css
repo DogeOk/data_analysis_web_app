@@ -12,3 +12,10 @@ a {
     position: absolute;
     display: none;
 }
+.centered-div {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+    height: calc(100vh - 56px);
+}

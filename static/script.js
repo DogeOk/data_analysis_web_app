@@ -1,15 +1,15 @@
-//Hide context menu on left click
+// Hide context menu on left click
 document.addEventListener('click', function() {
     context_menu = document.getElementById('context-menu');
     context_menu.style.display = 'none';
 }, false);
 
-//Hide default context menu on right click
+// Hide default context menu on right click
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 }, false);
 
-//Create context menu with elements and actions
+// Create context menu with elements and actions
 function createContextMenu(elements, functions) {
     context_menu = document.getElementById('context-menu');
     context_menu.innerHTML = '';
@@ -25,17 +25,17 @@ function createContextMenu(elements, functions) {
     }
 }
 
-//Hide one element and show another element
+// Hide one element and show another element
 function hideShow(hideBlock, showBlock) {
     document.getElementById(hideBlock).style.display = 'none';
     document.getElementById(showBlock).style.display = 'block';
 }
 
-//Variables for check login and password
+// Variables for check login and password
 bad_login = false;
 bad_password = false;
 
-//Check login and show feedback
+// Check login and show feedback
 function checkLogin(login) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', './check_login');
@@ -54,7 +54,7 @@ function checkLogin(login) {
     xhr.send('login=' + login);
 }
 
-//Check passwords on repeat and show feedback
+// Check passwords on repeat and show feedback
 function checkPassword() {
     password = document.getElementById('inputRegisterPassword').value;
     repeat_password = document.getElementById('inputRepeatPassword').value;
@@ -69,7 +69,7 @@ function checkPassword() {
     }
 }
 
-//Send values to server for adding account
+// Send values to server for adding account
 function addAccount() {
     login = document.getElementById('inputRegisterLogin').value;
     password = document.getElementById('inputRegisterPassword').value;
@@ -104,7 +104,7 @@ function addAccount() {
     xhr.send('login=' + login + '&password=' + password);
 }
 
-//Authorization
+// Authorization
 function login() {
     login = document.getElementById('inputLogin').value;
     password = document.getElementById('inputPassword').value;
@@ -123,7 +123,7 @@ function login() {
     xhr.send('login=' + login + '&password=' + password);
 }
 
-//Upload user files in web
+// Upload user files in web
 function get_user_files() {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', './user_files');

@@ -28,12 +28,17 @@ class User(db.Model):
 # Table page
 @app.route('/')
 def table():
+    if (not os.path.isfile('./instance/project.db')):
+        db.create_all()
     login = request.cookies.get('login')
     if login is not None:
         if login not in users.keys():
             users[login] = UserInfo()
-    if (not os.path.isfile('./instance/project.db')):
-        db.create_all()
+    else:
+        return render_template(
+            'table.html',
+            login_none=True
+        )
     if users[login].data is None:
         data = None
         length = None
@@ -130,7 +135,6 @@ def upload_file():
 def open_file():
     filename = request.form['file_name']
     login = request.cookies.get('login')
-    print(f'./users_files/{login}/{filename}')
     users[login].data = pd.read_csv(f'./users_files/{login}/{filename}')
     return 'Success'
 

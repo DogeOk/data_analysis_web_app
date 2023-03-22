@@ -17,13 +17,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    {% if login != None %}
+                    {% if not login_none %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Файл
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Открыть</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть</a></li>
                             <li><a class="dropdown-item" href="#">Сохранить</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Экспортировать</a></li>
@@ -35,11 +35,11 @@
                     {% endif %}
                 </ul>
                 <div class="d-flex">
-                    {% if login == None %}
+                    {% if login_none %}
                     <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
                     <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
                     {% endif %}
-                    {% if login != None %}
+                    {% if not login_none %}
                     <div class="dropdown">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ login }}
@@ -114,6 +114,26 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть файл</button>
+    <div class="modal fade" id="filesModal" tabindex="-1" aria-labelledby="filesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Файлы</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="filesWindow" class="modal-body files-window">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-success" onclick="getUserFiles()">Обновить</button>
+                <label class="btn btn-success" for="userFile">Загрузить файл</label>
+                <input name="userFile" id="userFile" type="file" style="display: none;" onchange="uploadFile(this.files)">
+                <button type="button" class="btn btn-success">Открыть</button>
+            </div>
+        </div>
         </div>
     </div>
     <div id="context-menu" class="dropdown-menu context-menu" aria-labelledby="ctx-menu"></div>

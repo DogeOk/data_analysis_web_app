@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, make_response
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
 import pandas as pd
 import os
 
 
 # Class with user data
 class UserInfo():
-    data = pd.read_csv('./games.csv')
+    data = None
 
 
-user = UserInfo()
+users = {}
 
 # Init flask app and database
 app = Flask(__name__)
@@ -27,25 +28,38 @@ class User(db.Model):
 # Table page
 @app.route('/')
 def table():
+    login = request.cookies.get('login')
+    if login is not None:
+        if login not in users.keys():
+            users[login] = UserInfo()
     if (not os.path.isfile('./instance/project.db')):
         db.create_all()
+    if users[login].data is None:
+        data = None
+        length = None
+    else:
+        data = users[login].data.head(10)
+        length = len(users[login].data.columns)
     return render_template(
         'table.html',
-        data=user.data.head(10),
-        len=len(user.data.columns),
-        login=request.cookies.get('login')
+        data=data,
+        len=length,
+        login=login,
+        data_none=data is None,
+        login_none=login is None
     )
 
 
 # Change table values
 @app.route('/table/change_table', methods=['POST'])
 def change_table():
+    login = request.cookies.get('login')
     index = request.form['index']
     column = request.form['column']
     value = request.form['value']
     if index.isdigit():
         index = int(index)
-    user.data.loc[index, column] = value
+    users[login].data.loc[index, column] = value
     return '0'
 
 
@@ -68,6 +82,7 @@ def add_account():
     db.session.commit()
     response = make_response('Success')
     response.set_cookie('login', login)
+    users[login] = UserInfo()
     os.makedirs(f'./users_files/{login}')
     return response
 
@@ -82,6 +97,7 @@ def login():
     else:
         response = make_response('Success')
         response.set_cookie('login', login)
+        users[login] = UserInfo()
         return response
 
 
@@ -89,6 +105,7 @@ def login():
 def logout():
     response = make_response('<script>window.location.replace("/");</script>')
     response.delete_cookie('login')
+    del users[request.cookies.get('login')]
     return response
 
 
@@ -99,6 +116,23 @@ def user_files():
         return 'Error'
     files = [file for file in os.listdir(f"./users_files/{login}")]
     return files
+
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    login = request.cookies.get('login')
+    file = request.files['user_file']
+    file.save(f'./users_files/{login}/{secure_filename(file.filename)}')
+    return 'Success'
+
+
+@app.route('/open_file', methods=['POST'])
+def open_file():
+    filename = request.form['file_name']
+    login = request.cookies.get('login')
+    print(f'./users_files/{login}/{filename}')
+    users[login].data = pd.read_csv(f'./users_files/{login}/{filename}')
+    return 'Success'
 
 
 @app.route('/get_cookie')

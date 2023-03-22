@@ -123,18 +123,79 @@ function login() {
     xhr.send('login=' + login + '&password=' + password);
 }
 
-// Upload user files in web
-function get_user_files() {
+// Get all user files
+function getUserFiles() {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', './user_files');
+    xhr.open('GET', './user_files');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200){
-            files = xhr.responseText;
-            for (let file = 0; file < files.length; file++) {
-
+            file_elements = document.querySelectorAll('.file');
+            for (let index = 0; index < file_elements.length; index++) {
+                file_elements[index].remove();
+            }
+            files = JSON.parse(xhr.responseText);
+            files_window = document.getElementById('filesWindow');
+            for (let index = 0; index < files.length; index++) {
+                file = document.createElement('div');
+                file.className = 'file';
+                file.setAttribute('onclick', 'openFile(this);');
+                file.setAttribute('file-name', files[index]);
+                file.setAttribute('selected', false);
+                file_icon = document.createElement('div');
+                file_icon.className = 'file-icon';
+                file_icon.innerHTML = `<svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <path d="M7 18H17V16H7V18Z" fill="currentColor" />
+                <path d="M17 14H7V12H17V14Z" fill="currentColor" />
+                <path d="M7 10H11V8H7V10Z" fill="currentColor" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C4.34315 2 3 3.34315 3 5V19C3 20.6569 4.34315 22 6 22H18C19.6569 22 21 20.6569 21 19V9C21 5.13401 17.866 2 14 2H6ZM6 4H13V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4ZM15 4.10002C16.6113 4.4271 17.9413 5.52906 18.584 7H15V4.10002Z" fill="currentColor"/></svg>`;
+                file_name = document.createElement('span');
+                file_name.className = 'h6';
+                file_name.innerHTML = files[index];
+                file.appendChild(file_icon);
+                file.appendChild(file_name);
+                files_window.appendChild(file);
             }
         }
     }
-    xhr.send('login=' + login + '&password=' + password);
+    xhr.send('');
+}
+
+// Upload user file to server
+function uploadFile(file) {
+    file = file[0];
+    var xhr = new XMLHttpRequest();
+    var formData = new FormData();
+    console.log(file);
+    formData.append("user_file", file);
+    xhr.open('POST', './upload_file');
+    xhr.onreadystatechange = function(e) {
+        if ( 4 == this.readyState ) {
+            getUserFiles();
+        }
+    };
+    xhr.send(formData);
+}
+
+// Open user file
+function openFile(element) {
+    if (element.getAttribute('selected') == 'true') {
+        file_name = element.getAttribute('file-name');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', './open_file');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200){
+                location.reload();
+            }
+        }
+        xhr.send('file_name=' + file_name);
+    }
+    files = document.querySelectorAll('.file');
+    for (let index = 0; index < files.length; index++) {
+        files[index].style.backgroundColor = 'transparent';
+        files[index].setAttribute('selected', false);
+    }
+    element.style.backgroundColor = '#198754';
+    element.setAttribute('selected', true);
 }

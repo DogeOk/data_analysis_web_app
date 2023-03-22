@@ -19,3 +19,14 @@ a {
     text-align: center;
     height: calc(100vh - 56px);
 }
+.files-window {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+}
+.file {
+    cursor: pointer;
+    border-radius: 10px;
+    text-align: center;
+    user-select: none;
+}

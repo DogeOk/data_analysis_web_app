@@ -10,7 +10,7 @@ document.addEventListener('contextmenu', function(e) {
 }, false);
 
 // Create context menu with elements and actions
-function createContextMenu(elements, functions) {
+function createContextMenu(elements, functions, object) {
     context_menu = document.getElementById('context-menu');
     context_menu.innerHTML = '';
     context_menu.style.display = 'block';
@@ -21,6 +21,7 @@ function createContextMenu(elements, functions) {
         element.className = "dropdown-item";
         element.textContent = elements[i];
         element.href = "#";
+        element.onclick = functions[i];
         context_menu.appendChild(element);
     }
 }
@@ -151,7 +152,7 @@ function getUserFiles() {
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C4.34315 2 3 3.34315 3 5V19C3 20.6569 4.34315 22 6 22H18C19.6569 22 21 20.6569 21 19V9C21 5.13401 17.866 2 14 2H6ZM6 4H13V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19V5C5 4.44772 5.44772 4 6 4ZM15 4.10002C16.6113 4.4271 17.9413 5.52906 18.584 7H15V4.10002Z" fill="currentColor"/></svg>`;
                 file_name = document.createElement('span');
                 file_name.className = 'h6';
-                file_name.innerHTML = files[index];
+                file_name.innerText = files[index];
                 file.appendChild(file_icon);
                 file.appendChild(file_name);
                 files_window.appendChild(file);
@@ -166,10 +167,9 @@ function uploadFile(file) {
     file = file[0];
     var xhr = new XMLHttpRequest();
     var formData = new FormData();
-    console.log(file);
     formData.append("user_file", file);
     xhr.open('POST', './upload_file');
-    xhr.onreadystatechange = function(e) {
+    xhr.onreadystatechange = function() {
         if ( 4 == this.readyState ) {
             getUserFiles();
         }
@@ -196,6 +196,33 @@ function openFile(element) {
         files[index].style.backgroundColor = 'transparent';
         files[index].setAttribute('selected', false);
     }
-    element.style.backgroundColor = '#198754';
+    element.style.backgroundColor = '#0d6efd';
     element.setAttribute('selected', true);
+}
+
+// Delete user file
+function deleteFile() {
+    files = document.querySelectorAll('.file');
+    for (let index = 0; index < files.length; index++) {
+        if (files[index].getAttribute('selected') == 'true') {
+            file_name = files[index].getAttribute('file-name');
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', './delete_file');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200){
+                    getUserFiles();
+                }
+            }
+            xhr.send('file_name=' + file_name);
+        }
+    }
+}
+
+// Save user file
+function saveFile() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', './save_file');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send('');
 }

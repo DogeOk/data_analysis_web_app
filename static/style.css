@@ -21,7 +21,7 @@ a {
 }
 .files-window {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 5px;
 }
 .file {
@@ -29,4 +29,5 @@ a {
     border-radius: 10px;
     text-align: center;
     user-select: none;
+    padding: 5px 10px;
 }

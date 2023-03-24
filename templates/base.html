@@ -19,29 +19,53 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if not login_none %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarFileDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Файл
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu" aria-labelledby="navbarFileDropdownMenuLink">
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть</a></li>
-                            <li><a class="dropdown-item" href="#">Сохранить</a></li>
+                            {% if not data_none %}
+                            <li><a class="dropdown-item" href="#" onclick="saveFile()">Сохранить</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Экспортировать</a></li>
-                            <li><a class="dropdown-item" href="#">Экспортировать как...</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Закрыть документ</a></li>
+                            <li><a class="dropdown-item" href="./download_file">Экспортировать</a></li>
+                            {% endif %}
                         </ul>
                     </li>
+                    {% if not data_none %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarProcessingDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Обработка
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarProcessingDropdownMenuLink">
+                            <li><a class="dropdown-item" href="./table/auto_rename_columns">Автоматическое изменение имён столбцов</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="deleteDuplicates(':')">Удаление дубликатов</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarInfoDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Информация
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarInfoDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#" onclick="getTableInfo()">Общая информация</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="getTableSkips()">Количество пропусков</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#graphModal" href="#">График</a>
+                    </li>
+                    {% endif %}
                     {% endif %}
                 </ul>
                 <div class="d-flex">
                     {% if login_none %}
-                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
-                    <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
+                    <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
+                    <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
                     {% endif %}
                     {% if not login_none %}
                     <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ login }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
@@ -78,7 +102,7 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
-                <button onclick="login()" type="button" class="btn btn-success">Авторизация</button>
+                <button onclick="login()" type="button" class="btn btn-primary">Авторизация</button>
                 </div>
             </div>
             <div class="modal-content" id="registerForm"">
@@ -110,13 +134,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
-                        <button onclick="addAccount()" type="button" class="btn btn-success">Регистрация</button>
+                        <button onclick="addAccount()" type="button" class="btn btn-primary">Регистрация</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть файл</button>
+    {% if not login_none %}
     <div class="modal fade" id="filesModal" tabindex="-1" aria-labelledby="filesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -128,14 +152,75 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-success" onclick="getUserFiles()">Обновить</button>
-                <label class="btn btn-success" for="userFile">Загрузить файл</label>
+                <button type="button" class="btn btn-primary" onclick="getUserFiles()">Обновить</button>
+                <label class="btn btn-primary" for="userFile">Загрузить файл</label>
                 <input name="userFile" id="userFile" type="file" style="display: none;" onchange="uploadFile(this.files)">
-                <button type="button" class="btn btn-success">Открыть</button>
+                <button type="button" class="btn btn-primary" onclick="deleteFile()">Удалить</button>
             </div>
         </div>
         </div>
     </div>
+    {% if not data_none %}
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="infoModalLabel">Инфо</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="infoWindow" class="modal-body">
+                <samp id="infoText"></samp>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="modal fade" id="graphModal" tabindex="-1" aria-labelledby="graphModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="graphModalLabel">Построить график</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/graph" method="post">
+            <div id="infoWindow" class="modal-body">
+                <div class="mb-3">
+                    <label for="graphType" class="form-label">Вид графика</label>
+                    <select name="graphType" id="graphType" class="form-select">
+                        <option value="scatter-plot">График разброса</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="xGraph" class="form-label">X</label>
+                    <select name="xGraph" id="xGraph" class="form-select">
+                        {%for i in range(0, len)%}
+                            <option>{{data.columns[i]}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="yGraph" class="form-label">Y</label>
+                        <select name="yGraph" id="yGraph" class="form-select">
+                            {%for i in range(0, len)%}
+                                <option>{{data.columns[i]}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Построить график</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
     <div id="context-menu" class="dropdown-menu context-menu" aria-labelledby="ctx-menu"></div>
     <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

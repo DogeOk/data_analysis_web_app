@@ -7,18 +7,26 @@
 <div class="centered-div">
     <div>
         <h5 class="h5">Пожалуйста войдите в свой аккаунт или зарегистрируйтесь, чтобы продолжить работу</h5>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('registerForm', 'loginForm')">Авторизация</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal" type="button" onclick="hideShow('loginForm', 'registerForm')">Регистрация</button>
     </div>
 </div>
 {% endif %}
-{% if not login_none  %}
+{% if not login_none %}
+    {% if data_none %}
+    <div class="centered-div">
+        <div>
+            <h5 class="h5">Откройте файл для работы</h5>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть файл</button>
+        </div>
+    </div>
+    {% endif %}
     {% if not data_none %}
     <table class="table table-hover">
         <thead>
             <tr>
                 {%for i in range(0, len)%}
-                    <th scope="col">{{data.columns[i]}}</th>
+                    <th scope="col" column="{{data.columns[i]}}" oncontextmenu="columnContextMenu(this)">{{data.columns[i]}}</th>
                 {%endfor%}
             </tr>
         </thead>
@@ -26,7 +34,7 @@
             {%for index, row in data.iterrows()%}
                 <tr>
                 {%for column, value in row.items()%}
-                    <td><input onchange="sendValue('{{index}}', '{{column}}', this.value)" oncontextmenu="cellContextMenu()" class="table_cell w-100" type="text" value="{{value}}"></td>
+                    <td><input onchange="sendValue(this)" oncontextmenu="cellContextMenu(this)" class="table_cell w-100" type="text" value="{{value}}" index="{{index}}" column="{{column}}"></td>
                 {%endfor%}
                 </tr>
             {%endfor%}

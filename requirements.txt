@@ -1,4 +1,5 @@
-python -m pip install flask
-python -m pip install pandas
-python -m pip install scikit-learn
-
+flask
+Flask-SQLAlchemy
+pandas
+scikit-learn
+plotly

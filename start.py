@@ -160,6 +160,46 @@ def auto_rename_columns():
     return '<script>window.location.replace("/");</script>'
 
 
+@app.route('/table/replace_values', methods=['POST'])
+def replace_values():
+    login = request.cookies.get('login')
+    find = request.form['findValue']
+    if find.isdigit():
+        find = float(find)
+    replace = request.form['replaceValue']
+    if replace.isdigit():
+        replace = float(replace)
+    column = request.form['columnReplace']
+    users[login].data[column] = users[login].data[column].apply(
+        lambda value: replace if value == find else value
+    )
+    return '<script>window.location.replace("/");</script>'
+
+
+@app.route('/table/create_pivot_table', methods=['POST'])
+def create_pivot_table():
+    login = request.cookies.get('login')
+    index = request.form['pivotTableIndex']
+    values = request.form['pivotTableValues']
+    func = request.form['pivotTableFunction']
+    open_new_table = request.form.get('pivotTableOpen')
+    file_name = request.form['pivotTableSaveName']
+    new_pivot_table = users[login].data.pivot_table(
+        index=index,
+        values=values,
+        aggfunc=func
+    ).reset_index()
+    if file_name[-4:] != '.csv':
+        file_name = file_name + '.csv'
+    new_pivot_table.to_csv(
+        f'./users_files/{login}/{file_name}',
+        index=False
+    )
+    if open_new_table == 'on':
+        users[login].data = new_pivot_table
+    return '<script>window.location.replace("/");</script>'
+
+
 # Check login
 @app.route('/check_login', methods=['POST'])
 def check_login():
@@ -240,10 +280,19 @@ def delete_file():
     return 'Success'
 
 
-@app.route('/save_file')
+@app.route('/save_file', methods=['POST'])
 def save_file():
     login = request.cookies.get('login')
-    users[login].data.to_csv(users[login].file_path, index=False)
+    file_name = request.form['fileName']
+    if file_name == ':':
+        users[login].data.to_csv(users[login].file_path, index=False)
+    else:
+        if file_name[-4:] != '.csv':
+            file_name = file_name + '.csv'
+        users[login].data.to_csv(
+            f'./users_files/{login}/{file_name}',
+            index=False
+        )
     return 'Success'
 
 
@@ -258,6 +307,8 @@ def graph():
     login = request.cookies.get('login')
     x = request.form['xGraph']
     y = request.form['yGraph']
-    fig = users[login].data.plot.scatter(x=x, y=y)
+    graph_type = request.form['graphType']
+    graph_title = request.form['graphName']
+    fig = users[login].data.plot(kind=graph_type, x=x, y=y, title=graph_title)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('graph.html', graphJSON=graphJSON)

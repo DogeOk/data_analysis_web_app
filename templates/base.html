@@ -25,7 +25,9 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarFileDropdownMenuLink">
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#filesModal" onclick="getUserFiles()">Открыть</a></li>
                             {% if not data_none %}
-                            <li><a class="dropdown-item" href="#" onclick="saveFile()">Сохранить</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="saveFile(':')">Сохранить</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="saveFile('input')">Сохранить как ...</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="./download_file">Экспортировать</a></li>
                             {% endif %}
@@ -54,6 +56,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#graphModal" href="#">График</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="modal" data-bs-target="#pivotTableModal" href="#">Сводная таблица</a>
                     </li>
                     {% endif %}
                     {% endif %}
@@ -185,11 +190,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/graph" method="post">
-            <div id="infoWindow" class="modal-body">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="graphName" class="form-label">Название графика</label>
+                    <input type="text" class="form-control" id="graphName" name="graphName">
+                </div>
                 <div class="mb-3">
                     <label for="graphType" class="form-label">Вид графика</label>
                     <select name="graphType" id="graphType" class="form-select">
-                        <option value="scatter-plot">График разброса</option>
+                        <option value="scatter">График разброса</option>
+                        <option value="bar">Столбчатый график</option>
+                        <option value="line">Линейный график</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -214,6 +225,83 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
                 <button type="submit" class="btn btn-primary">Построить график</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="modal fade" id="replaceModal" tabindex="-1" aria-labelledby="replaceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="replaceModalLabel"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="./table/replace_values" method="post">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="findValue" class="form-label">Найти</label>
+                    <input type="text" class="form-control" id="findValue" name="findValue">
+                </div>
+                <div class="mb-3">
+                    <label for="replaceValue" class="form-label">Заменить</label>
+                    <input type="text" class="form-control" id="replaceValue" name="replaceValue">
+                </div>
+                <input type="text" id="columnReplace" name="columnReplace" style="display: none;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Заменить значения</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <div class="modal fade" id="pivotTableModal" tabindex="-1" aria-labelledby="pivotTableModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="pivotTableModalLabel">Создать сводную таблицу</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="./table/create_pivot_table" method="post">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="pivotTableIndex" class="form-label">Индекс</label>
+                    <select name="pivotTableIndex" id="pivotTableIndex" class="form-select">
+                        {%for i in range(0, len)%}
+                            <option>{{data.columns[i]}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="pivotTableValues" class="form-label">Столбец</label>
+                    <select name="pivotTableValues" id="pivotTableValues" class="form-select">
+                        {%for i in range(0, len)%}
+                            <option>{{data.columns[i]}}</option>
+                        {%endfor%}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="pivotTableFunction" class="form-label">Функция</label>
+                    <select name="pivotTableFunction" id="pivotTableFunction" class="form-select">
+                            <option value="mean">Найти среднее</option>
+                            <option value="median">Найти медиану</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="pivotTableSaveName" class="form-label">Имя файла</label>
+                    <input type="text" class="form-control" id="pivotTableSaveName" name="pivotTableSaveName">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="pivotTableOpen" name="pivotTableOpen">
+                    <label class="form-check-label" for="pivotTableOpen">Открыть таблицу после создания</label>
+                </div>
+                <input type="text" id="columnReplace" name="columnReplace" style="display: none;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-primary">Создать таблицу</button>
             </div>
             </form>
         </div>

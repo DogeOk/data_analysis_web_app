@@ -220,9 +220,12 @@ function deleteFile() {
 }
 
 // Save user file
-function saveFile() {
+function saveFile(file_name) {
+    if (file_name != ':') {
+        file_name = prompt('Введите имя файла.');
+    }
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', './save_file');
+    xhr.open('POST', './save_file');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send('');
+    xhr.send('fileName=' + file_name);
 }

@@ -42,7 +42,12 @@ function cellContextMenu(object) {
 
 //Create column context menu
 function columnContextMenu(object) {
-    createContextMenu(['Удалить столбец', 'Удалить строки с пропусками', 'Уникальные значения столбца'], [
+    createContextMenu([
+        'Удалить столбец',
+        'Удалить строки с пропусками',
+        'Уникальные значения столбца',
+        'Заменить значения',
+    ], [
         function deleteColumn() {
             column = object.getAttribute('column');
             var xhr = new XMLHttpRequest();
@@ -90,6 +95,12 @@ function columnContextMenu(object) {
                 }
             }
             xhr.send('column=' + column);
+        },
+        function replaceValues() {
+            column = object.getAttribute('column');
+            document.getElementById('replaceModalLabel').innerText = 'Заменить значения в столбце ' + column;
+            document.getElementById('columnReplace').value = column;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('replaceModal')).show()
         }
     ]);
     window.event.preventDefault();

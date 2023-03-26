@@ -31,3 +31,6 @@ a {
     user-select: none;
     padding: 5px 10px;
 }
+.form-check-label {
+    user-select: none;
+}

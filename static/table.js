@@ -11,7 +11,7 @@ function sendValue(object) {
 
 //Create cell context menu
 function cellContextMenu(object) {
-    createContextMenu(['Удалить столбец', 'Удалить строку'], [
+    createContextMenu(['Удалить столбец', 'Удалить строку', 'Копировать', 'Вставить'], [
         function deleteColumn() {
             column = object.getAttribute('column');
             var xhr = new XMLHttpRequest();
@@ -36,6 +36,12 @@ function cellContextMenu(object) {
             }
             xhr.send('index=' + index);
         },
+        function CellCopyToClipboard() {
+            navigator.clipboard.writeText(window.getSelection().toString());
+        },
+        function PasteClipboard() {
+            document.execCommand('Paste');
+        },
     ]);
     window.event.preventDefault();
 }
@@ -47,6 +53,7 @@ function columnContextMenu(object) {
         'Удалить строки с пропусками',
         'Уникальные значения столбца',
         'Заменить значения',
+        'Копировать'
     ], [
         function deleteColumn() {
             column = object.getAttribute('column');
@@ -101,7 +108,10 @@ function columnContextMenu(object) {
             document.getElementById('replaceModalLabel').innerText = 'Заменить значения в столбце ' + column;
             document.getElementById('columnReplace').value = column;
             bootstrap.Modal.getOrCreateInstance(document.getElementById('replaceModal')).show()
-        }
+        },
+        function ColumnCopyToClipboard() {
+            navigator.clipboard.writeText(window.getSelection().toString());
+        },
     ]);
     window.event.preventDefault();
 }

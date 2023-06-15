@@ -10,7 +10,7 @@ document.addEventListener('contextmenu', function(e) {
 }, false);
 
 // Create context menu with elements and actions
-function createContextMenu(elements, functions, object) {
+function createContextMenu(elements, functions) {
     context_menu = document.getElementById('context-menu');
     context_menu.innerHTML = '';
     context_menu.style.display = 'block';

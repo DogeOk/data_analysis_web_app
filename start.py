@@ -4,10 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 import plotly
 from werkzeug.utils import secure_filename
 import pandas as pd
+from ydata_profiling import ProfileReport
 import os
 import re
 import io
 import json
+import multiprocessing
 
 
 # Class with user data
@@ -72,6 +74,22 @@ def table_info():
     return buffer.getvalue()
 
 
+def get_profile_report(profile):
+    pd.options.plotting.backend = "matplotlib"
+    return profile.to_html()
+
+
+@app.route('/table/profile_report')
+def table_profile_report():
+    login = request.cookies.get('login')
+    with multiprocessing.Pool(multiprocessing.cpu_count()) as p:
+        report = p.map(
+            get_profile_report,
+            [ProfileReport(users[login].data, title='Подробный отчёт')]
+        )
+    return report[0]
+
+
 # Change table values
 @app.route('/table/change_table', methods=['POST'])
 def change_table():
@@ -81,8 +99,15 @@ def change_table():
     value = request.form['value']
     if index.isdigit():
         index = int(index)
-    users[login].data.loc[index, column] = value
+    if value.isdigit():
+        users[login].data.loc[index, column] = int(value)
+        return 'Success'
+    try:
+        users[login].data.loc[index, column] = float(value)
+    except ValueError:
+        users[login].data.loc[index, column] = value
     return 'Success'
+
 
 
 # Delete columns from table
@@ -238,6 +263,7 @@ def login():
         return response
 
 
+# Logout from account
 @app.route('/logout')
 def logout():
     response = make_response('<script>window.location.replace("/");</script>')
@@ -246,6 +272,7 @@ def logout():
     return response
 
 
+# Return list of user files
 @app.route('/user_files')
 def user_files():
     login = request.cookies.get('login')
@@ -255,6 +282,7 @@ def user_files():
     return files
 
 
+# Upload user file
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
     login = request.cookies.get('login')
@@ -263,6 +291,7 @@ def upload_file():
     return 'Success'
 
 
+# Open user file
 @app.route('/open_file', methods=['POST'])
 def open_file():
     filename = request.form['file_name']
@@ -272,6 +301,7 @@ def open_file():
     return 'Success'
 
 
+# Delete user file
 @app.route('/delete_file', methods=['POST'])
 def delete_file():
     filename = request.form['file_name']
@@ -280,6 +310,7 @@ def delete_file():
     return 'Success'
 
 
+# Save user file in server
 @app.route('/save_file', methods=['POST'])
 def save_file():
     login = request.cookies.get('login')
@@ -296,12 +327,14 @@ def save_file():
     return 'Success'
 
 
+# Export user file
 @app.route('/download_file')
 def download_file():
     login = request.cookies.get('login')
     return send_file(users[login].file_path)
 
 
+# Create graphs
 @app.route('/graph', methods=['POST'])
 def graph():
     login = request.cookies.get('login')

@@ -1,5 +1,5 @@
 flask
 Flask-SQLAlchemy
 pandas
-scikit-learn
 plotly
+ydata-profiling

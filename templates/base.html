@@ -50,6 +50,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarInfoDropdownMenuLink">
                             <li><a class="dropdown-item" href="#" onclick="getTableInfo()">Общая информация</a></li>
+                            <li><a class="dropdown-item" href="./table/profile_report" target="_blank">Подробная информация</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#" onclick="getTableSkips()">Количество пропусков</a></li>
                         </ul>
@@ -74,8 +75,8 @@
                             {{ login }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">Настройки</a></li>
-                            <li><hr class="dropdown-divider"></li>
+<!--                             <li><a class="dropdown-item" href="#">Настройки</a></li>
+                            <li><hr class="dropdown-divider"></li> -->
                             <li><a class="dropdown-item" href="./logout">Выход</a></li>
                         </ul>
                     </div>
@@ -189,7 +190,7 @@
             <h5 class="modal-title" id="graphModalLabel">Построить график</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/graph" method="post">
+            <form action="/graph" method="post" target="_blank">
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="graphName" class="form-label">Название графика</label>

@@ -6,6 +6,7 @@
 + JS
 + Boostrap 5
 + Python
++ Flask
 + Pandas
 + plotly
 + ydata-profiling

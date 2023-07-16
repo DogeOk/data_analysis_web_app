@@ -11,7 +11,7 @@ function sendValue(object) {
 
 //Create cell context menu
 function cellContextMenu(object) {
-    createContextMenu(['Удалить столбец', 'Удалить строку', 'Копировать', 'Вставить'], [
+    createContextMenu(['Удалить столбец', 'Удалить строку', 'Копировать'/* , 'Вставить' */], [
         function deleteColumn() {
             column = object.getAttribute('column');
             var xhr = new XMLHttpRequest();
@@ -39,9 +39,9 @@ function cellContextMenu(object) {
         function CellCopyToClipboard() {
             navigator.clipboard.writeText(window.getSelection().toString());
         },
-        function PasteClipboard() {
+/*         function PasteClipboard() {
             document.execCommand('Paste');
-        },
+        }, */
     ]);
     window.event.preventDefault();
 }
